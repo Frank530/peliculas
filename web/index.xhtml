@@ -1,0 +1,172 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Peliculas</title>
+    </h:head>
+    <h:body>
+       
+        <h:form id="form">
+            <p:tabMenu activeIndex="#{param.i}">
+                <p:menuitem value="Peliculas" outcome="/index.xhtml" icon="pi pi-star">
+                    <f:param name="i" value="0" />
+                </p:menuitem>
+                <p:menuitem value="Series" outcome="/series.xhtml" icon="pi pi-search">
+                    <f:param name="i" value="1" />
+                </p:menuitem>
+                <p:menuitem value="Ranking" outcome="/ranking.xhtml" icon="pi pi-star">
+                    <f:param name="i" value="2" />
+                </p:menuitem>
+            </p:tabMenu>
+            <div class="ui-g">
+            <p:panel  id="basic" header="Peliculas">
+                    <p:growl id="msg"/>
+                    <p:dataTable id="peliculas" var="pelis" value="#{peliculaBean.peliculas}" editable="true">
+                        <p:ajax event="rowEdit" listener="#{peliculaBean.actualizar}" update=":form:msg"/>
+                        <p:ajax event="rowEditCancel"  listener="#{peliculaBean.cancelar}" update=":form:msg"/>
+                        
+                        <p:column>
+                            <h:selectBooleanCheckbox value="#{pelis.selected}"/>
+                        </p:column>
+                        
+                        <p:column headerText="Id">
+                            <h:outputText value="#{pelis.id}" />
+                        </p:column>
+                        
+                        <p:column headerText="Nombre">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{pelis.nombre}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{pelis.nombre}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Descripcion">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{pelis.descripcion}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{pelis.descripcion}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="tipo">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{pelis.tipo}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{pelis.tipo}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        
+                        
+                        <p:column>
+                            <p:rowEditor/>
+                        </p:column>
+                          <p:column>
+                              <p:commandLink value="Detalle" update=":form:carDetail" oncomplete="PF('carDialog').show()" title="View Detail" actionListener="#{peliculaBean.Buscar(pelis)}"/>
+                        </p:column>
+                    </p:dataTable> 
+                <br/>
+                <p:commandButton actionListener="#{peliculaBean.eliminar()}" value="Eliminar" update="form" icon="ui-icon-trash">
+                    <p:confirm message="¿Seguro de eliminar?" header="Aviso" icon="ui-icon-alert"/>
+                </p:commandButton>
+                <p:confirmDialog global="true">
+                    <p:commandButton value="Si" type="button" icon="ui-icon-check" styleClass="ui-confirmdialog-yes"/>
+                    <p:commandButton value="No" type="button" icon="ui-icon-close" styleClass="ui-confirmdialog-no"/>
+                </p:confirmDialog>
+                
+                <p:dialog header="Pelicula info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="carDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty peliculaBean.pelicula}" columnClasses="label,value">
+
+
+                            <h:outputText value="Id:" />
+                            <h:outputText value="#{peliculaBean.pelicula.id}" />
+
+                            <h:outputText value="Nombre" />
+                            <h:outputText value="#{peliculaBean.pelicula.nombre}" />
+
+                            <h:outputText value="Descripcion:" />
+                            <h:outputText value="#{peliculaBean.pelicula.descripcion}"/>
+
+                            <h:outputText value="Director" />
+                            <h:outputText value="#{peliculaBean.pelicula.director}" />
+                            <h:outputText value="Genero" />
+                            <h:outputText value="#{peliculaBean.pelicula.genero}" />
+                            <h:outputText value="Lenguaje" />
+                            <h:outputText value="#{peliculaBean.pelicula.lenguaje}" />
+                            <h:outputText value="Calificacion" />
+                            <h:outputText value="#{peliculaBean.pelicula.puntuacion} puntos" />
+                            <h:outputText value="Duracion" />
+                            <h:outputText value="#{peliculaBean.pelicula.duracion} minutos" />
+                            <h:outputText value="Tipo" />
+                            <h:outputText value="#{peliculaBean.pelicula.tipo} " />
+                            
+                            
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </p:panel>
+        </div>
+            
+            
+            <p:fieldset legend="Agregar" toggleable="true" toggleSpeed="500" style="width: 50%">
+                    
+                    
+                    <h:panelGrid id="grid" columns="3" cellpadding="5">
+                        <p:outputLabel for="nombre" value="Nombre" />
+                        <p:inputText id="nombre" required="false" value="#{peliculaBean.pelicula.nombre}" />
+                        <p:message for="nombre" />
+
+                        <p:outputLabel for="descripcion" value="Descripcion:" />
+                        <p:inputText id="descripcion" required="false" value="#{peliculaBean.pelicula.descripcion}"/>
+                        <p:message for="descripcion" display="text" />
+
+                        <p:outputLabel for="tipo" value="Tipo" />
+                        <p:inputText id="tipo" required="false" value="#{peliculaBean.pelicula.tipo}"/>
+                        <p:message for="tipo" display="icon" />
+
+                        <p:outputLabel for="genero" value="Genero" />
+                        <p:inputText id="genero" required="false" value="#{peliculaBean.pelicula.genero}"/>
+                        <p:message for="genero" display="icon" />
+                        
+                        
+                        <p:outputLabel for="director" value="Director" />
+                        <p:inputText id="director" required="false" value="#{peliculaBean.pelicula.director}"/>
+                        <p:message for="director" display="icon" />
+                        
+                        <p:outputLabel for="lenguaje" value="Lenguaje Original" />
+                        <p:inputText id="lenguaje" required="false" value="#{peliculaBean.pelicula.lenguaje}"/>
+                        <p:message for="lenguaje" display="icon" />
+                        
+                        <p:outputLabel for="duracion" value="Duracion(min):" />
+                        <p:inputText id="duracion" required="false" value="#{peliculaBean.pelicula.duracion}"/>
+                        <p:message for="duracion" display="icon" />
+                        
+                        <p:outputLabel for="puntuacion" value="Puntuacion(%):" />
+                        <p:inputText id="puntuacion" required="false" value="#{peliculaBean.pelicula.puntuacion}"/>
+                        <p:message for="puntuacion" display="icon" />
+                        
+                        <p:commandButton id="submitButton" value="Guardar" update="@form, basic" action="#{peliculaBean.guardar()}" />
+                        
+                        
+                    </h:panelGrid>
+            </p:fieldset> 
+        </h:form>
+        
+        
+            
+        
+        
+    </h:body>
+</html>
+

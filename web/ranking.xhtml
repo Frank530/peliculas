@@ -1,0 +1,98 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+    <h:head>
+        <title>Ranking</title>
+        
+    </h:head>
+    <h:body>
+           <h:form id="form">
+            <p:tabMenu activeIndex="#{param.i}">
+                <p:menuitem value="Peliculas" outcome="/index.xhtml" icon="ui-icon-trash">
+                    <f:param name="i" value="0" />
+                </p:menuitem>
+                <p:menuitem value="Series" outcome="/series.xhtml" icon="pi pi-search">
+                    <f:param name="i" value="1" />
+                </p:menuitem>
+                <p:menuitem value="Ranking" outcome="/ranking.xhtml" icon="pi pi-star">
+                    <f:param name="i" value="2" />
+                </p:menuitem>
+            </p:tabMenu>
+            <div class="ui-g">
+            <p:panel  id="basic" header="Peliculas con puntuacion mayor a 80">
+                    <p:growl id="msg"/>
+                    <p:dataTable id="peliculas" var="pelis" value="#{peliculaBean.ranking}" editable="true">
+                        
+                        <p:column headerText="Id">
+                            <h:outputText value="#{pelis.id}" />
+                        </p:column>
+                        
+                        <p:column headerText="Nombre">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{pelis.nombre}" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{pelis.nombre}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column headerText="Calificacion">
+                            <p:cellEditor>
+                                <f:facet name="output">
+                                    <h:outputText value="#{pelis.puntuacion} puntos" />
+                                </f:facet>
+                                <f:facet name="input">
+                                    <p:inputText value="#{pelis.descripcion}"/>
+                                </f:facet>
+                            </p:cellEditor>
+                        </p:column>
+                        <p:column>
+                              <p:commandLink value="Detalle" update=":form:carDetail" oncomplete="PF('carDialog').show()" title="View Detail" actionListener="#{peliculaBean.Buscar(pelis)}"/>
+                        </p:column>
+                    </p:dataTable> 
+                <br/>
+               
+                
+                <p:dialog header="Pelicula info" widgetVar="carDialog" modal="true" showEffect="fade" hideEffect="fade" resizable="false">
+                    <p:outputPanel id="carDetail" style="text-align:center;">
+                        <p:panelGrid  columns="2" rendered="#{not empty peliculaBean.pelicula}" columnClasses="label,value">
+
+
+                            <h:outputText value="Id:" />
+                            <h:outputText value="#{peliculaBean.pelicula.id}" />
+
+                            <h:outputText value="Nombre" />
+                            <h:outputText value="#{peliculaBean.pelicula.nombre}" />
+
+                            <h:outputText value="Descripcion:" />
+                            <h:outputText value="#{peliculaBean.pelicula.descripcion}"/>
+
+                            <h:outputText value="Director" />
+                            <h:outputText value="#{peliculaBean.pelicula.director}" />
+                            <h:outputText value="Genero" />
+                            <h:outputText value="#{peliculaBean.pelicula.genero}" />
+                            <h:outputText value="Lenguaje" />
+                            <h:outputText value="#{peliculaBean.pelicula.lenguaje}" />
+                            <h:outputText value="Calificacion" />
+                            <h:outputText value="#{peliculaBean.pelicula.puntuacion} puntos" />
+                            <h:outputText value="Duracion" />
+                            <h:outputText value="#{peliculaBean.pelicula.duracion} minutos" />
+                            <h:outputText value="Tipo" />
+                            <h:outputText value="#{peliculaBean.pelicula.tipo} " />
+                            
+                            
+                        </p:panelGrid>
+                    </p:outputPanel>
+                </p:dialog>
+            </p:panel>
+        </div>
+            
+            
+        
+        </h:form>
+        
+    </h:body>
+</html>
